@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import "@/assets/config.css"
+import "@/assets/base.css"
+import "@/assets/components.css"
 
 </script>
 
 <template>
   <div class="min-h-screen bg-gray-100">
     <div class="flex flex-row list-none">
-      <header class="p-8 mb-3">
+      <header class="ml-0 md:ml-4 p-8 mb-0">
         <nav>
-          <RouterLink to="/" class="ml-4 hover:text-purple-700">Inicio</RouterLink>
-          <RouterLink to="/grafos" class="ml-4 hover:text-purple-700">Grafos</RouterLink>
+          <RouterLink to="/" class="navegacion">Inicio</RouterLink>
+          <RouterLink to="/grafos" class="navegacion">Grafos</RouterLink>
         </nav>
       </header>
     </div>

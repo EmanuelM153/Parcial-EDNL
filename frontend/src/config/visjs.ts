@@ -1,21 +1,5 @@
 import { DataSet, Network } from "vis-network/standalone";
 
-// Función para guardar datos
-function saveData(data: any, callback: Function) {
-  data.label = (
-    document.getElementById("node-label") as HTMLInputElement
-  ).value;
-  document.getElementById("network-popUp")!.style.display = "none";
-  callback(data); // Confirmar el cambio
-}
-
-// Función para cancelar la edición
-function cancelEdit(callback: Function) {
-  document.getElementById("network-popUp")!.style.display = "none";
-  callback(null); // Cancelar la operación
-}
-
-// Ejecutar cuando el componente esté montado
 const locales = {
   en: {
     edit: "Editar",
@@ -25,14 +9,19 @@ const locales = {
     addEdge: "Agregar Arista",
     editNode: "Editar Nodo",
     editEdge: "Editar Arista",
+    addDescription: "Haz clic en un espacio vacío para colocar un nuevo nodo.",
+    edgeDescription: "Haz clic en un nodo y arrastra el borde hasta otro nodo para conectarlos.",
+    editEdgeDescription: "Haz clic en los puntos de control y arrástralos a un nodo para conectarlo.",
+    createEdgeError: "No se pueden enlazar bordes a un clúster.",
+    deleteClusterError: "Los clústeres no se pueden eliminar.",
+    editClusterError: "Los clústeres no se pueden editar."
   },
 };
 export const options = {
   autoResize: true,
   locale: "en",
   locales: locales,
-  height: "200%",
-  width: "300%",
+  height: "100%",
   nodes: {
     color: "#a855f7",
     fixed: false,
@@ -43,30 +32,11 @@ export const options = {
   },
   edges: {
     color: "#e879f9",
+    font: "10px arial black",
   },
   interaction: {
     hover: true,
     multiselect: true,
     navigationButtons: true,
-  },
-  manipulation: {
-    enabled: true,
-    initiallyActive: true,
-    editNode: function (data: any, callback: Function) {
-      // Rellenar los elementos del DOM del popup
-      document.getElementById("operation")!.innerText = "Editar Nodo";
-      (document.getElementById("node-label") as HTMLInputElement).value =
-        data.label;
-      document.getElementById("saveButton")!.onclick = saveData.bind(
-        this,
-        data,
-        callback
-      );
-      document.getElementById("cancelButton")!.onclick = cancelEdit.bind(
-        this,
-        callback
-      );
-      document.getElementById("network-popUp")!.style.display = "block";
-    },
   },
 };
