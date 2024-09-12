@@ -32,7 +32,7 @@
         </template>
     </popUp_modificar>
     <div @mousemove="moverMouse" class="mx-0 md:mx-2">
-        <div ref="mynetwork" class="w-full h-96"></div>
+        <div ref="mynetwork" class="w-full" style="height: 40rem"></div>
     </div>
 </template>
 
@@ -133,7 +133,13 @@ onMounted(() => {
                 popUpArista.value.argumento = "Valor"
                 _callback = callback
                 _data = data
-            }
+            },
+            // deleteNode(data: any, callback: Function) {
+            //     data.array.forEach(element => {
+            //         nombres.pop(element.label)
+            //     });
+            //     callback(data)
+            // }
         }
 
         const net = new Network(mynetwork.value, {}, options);

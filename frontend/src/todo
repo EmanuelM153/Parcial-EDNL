@@ -3,3 +3,5 @@
 - add a confirmation before changing pages, so that the network is not erased
 - fix edge labels appearing in the wrong position
 - fix repeated name message appearing twice
+- fix erasure of nodes not releasing the name
+- edit edge values instead of their connections
