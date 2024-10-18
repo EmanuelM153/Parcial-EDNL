@@ -1,5 +1,5 @@
 <template>
-  <form class="popUp positionPopUP" @submit.prevent="guardar()">
+  <form class="popUp positionPopUP" @submit.prevent="() => {}">
     <span class="text-base md:text-lg encabezado">{{ titulo }}</span>
     <div class="mb-3">
       <slot :datosActualizados="props.datos"></slot>
@@ -77,7 +77,7 @@ onMounted(() => {
   else
     yPos.value = y + "px"
 
-  height.value = props.altura.value
+  height.value = props.altura
 })
 
 </script>

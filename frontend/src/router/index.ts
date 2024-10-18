@@ -19,4 +19,11 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach(async (to, from) => {
+  if (from.path === "/grafos") {
+    let continuar = confirm("Asegurate de guardar el grafo\n¿Salir?")
+    if (!continuar) return "/grafos"
+  }
+})
+
 export default router

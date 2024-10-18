@@ -1,20 +1,12 @@
 <template>
     <popUp_Input v-if="popUpNodo.mostrar" @evento-cancelar="cancelarEdicionNodo" @evento-guardar="guardarNodo"
-        :datos="popUpNodo"
-        :argumento = "popUpNodo.argumento"
-        :titulo = "popUpNodo.titulo"
-        :mouse-pos = "mousePos"
-    />
-    <popUp_Input_ComboBox v-if="popUpArista.mostrar" @evento-cancelar="cancelarEdicionArista" @evento-guardar="guardarArista"
-        :datos="popUpArista"
-        :argumento-input = "popUpArista.argumento"
-        :argumento-combo-box = "popUpArista.argumentoComboBox"
-        :titulo = "popUpArista.titulo"
-        :mouse-pos = "mousePos"
-        :combo-box-options = "popUpArista.comboBoxOptions"
-    />
-    <div @mousemove="moverMouse" class="mx-0 md:mx-2">
-        <div ref="mynetwork" class="w-full h-96"></div>
+        :datos="popUpNodo" :argumento="popUpNodo.argumento" :titulo="popUpNodo.titulo" :mouse-pos="mousePos" />
+    <popUp_Input_ComboBox v-if="popUpArista.mostrar" @evento-cancelar="cancelarEdicionArista"
+        @evento-guardar="guardarArista" :datos="popUpArista" :argumento-input="popUpArista.argumento"
+        :argumento-combo-box="popUpArista.argumentoComboBox" :titulo="popUpArista.titulo" :mouse-pos="mousePos"
+        :combo-box-options="popUpArista.comboBoxOptions" />
+    <div class="flex h-screen">
+        <div ref="mynetwork" class="w-full h-full mx-0 md:mx-2" @mousemove="moverMouse"></div>
     </div>
 </template>
 
@@ -26,7 +18,7 @@ import { options } from "../config/visjs"
 import { ref, onMounted } from "vue";
 import { Network } from "vis-network/standalone";
 
-const nombres: Array<String> = []
+const nombres: Object = {}
 
 const popUpNodo = ref({
     mostrar: false,
@@ -61,8 +53,8 @@ function moverMouse(event: any) {
 }
 
 function guardarNodo() {
-    if (verificarNombre(popUpNodo.value.input, nombres)) {
-        nombres.push(popUpNodo.value.input)
+    if (verificarNombre(popUpNodo.value.input, Object.values(nombres))) {
+        nombres[_data.id] = popUpNodo.value.input
         _data.label = popUpNodo.value.input
         _callback(_data)
         popUpNodo.value.input = ""
@@ -92,6 +84,10 @@ function cancelarEdicionArista() {
 
 const mynetwork = ref<HTMLElement | null>(null);
 onMounted(() => {
+    console.log(mynetwork._value)
+    console.log(mynetwork._value.offsetWidth)
+    console.log(mynetwork._value.offsetHeight)
+
     if (mynetwork.value) {
         options.manipulation = {
             enabled: true,
@@ -105,18 +101,32 @@ onMounted(() => {
                 _data = data
             },
             addNode: function(data: any, callback: Function) {
-                popUpNodo.value.mostrar = true;
+                popUpNodo.value.mostrar = true
                 popUpNodo.value.titulo = "Agregar Nodo"
                 popUpNodo.value.argumento = "Nombre"
                 _callback = callback
                 _data = data
             },
+            editEdge: {
+                editWithoutDrag: function(data: any, callback: Function) {
+                    popUpArista.value.input = data.label
+                    popUpArista.value.mostrar = true
+                    popUpArista.value.titulo = "Editar Arista"
+                    popUpArista.value.argumento = "Nuevo Valor"
+                    _callback = callback
+                    _data = data
+                }
+            },
             addEdge(data: any, callback: Function) {
-                popUpArista.value.mostrar = true;
+                popUpArista.value.mostrar = true
                 popUpArista.value.titulo = "Agregar Arista"
                 popUpArista.value.argumento = "Valor"
                 _callback = callback
                 _data = data
+            },
+            deleteNode(data: any, callback: Function) {
+                popUpNodo.value.input = ""
+                callback(data)
             }
         }
 

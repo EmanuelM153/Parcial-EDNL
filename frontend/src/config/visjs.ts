@@ -11,7 +11,9 @@ export const options = {
   },
   edges: {
     color: "#e879f9",
-    font: "10px arial black",
+    font: { size: 10, face: "arial", vadjust: -5 },
+    smooth: { type: "continuous" },
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } },
   },
   interaction: {
     hover: true,
