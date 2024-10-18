@@ -2,9 +2,7 @@
   <form class="popUp positionPopUP" @submit.prevent="guardar()">
     <span class="text-base md:text-lg encabezado">{{ titulo }}</span>
     <div class="mb-3">
-      <p class="mb-2 text-left ml-2">{{ argumento }}</p>
-      <slot :dato="props.dato.valor" :actualizar="event => props.dato.valor = event.target.value"></slot>
-      <slot :dato="props.dato2.valor" name="secundario" :actualizar="event => props.dato2.valor = event.target.value"></slot>
+      <slot :datosActualizados="props.datos"></slot>
     </div>
     <div style="display: flex; justify-content: center;">
       <table>
@@ -14,7 +12,7 @@
               <button @click="guardar()" class="boton mr-1">Guardar</button>
             </td>
             <td>
-              <button @click="cancelar()" class="boton">Cancelar</button>
+              <button @click="emit('evento-cancelar')" class="boton">Cancelar</button>
             </td>
           </tr>
         </tbody>
@@ -23,16 +21,32 @@
   </form>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, ref, watch } from "vue"
+<script lang="js" setup>
+class mousePosClass {
+  constructor(x, y) {
+    this.x = x
+    this.y = y
+  }
+}
+
+import { onMounted, ref, } from "vue"
 
 const props = defineProps({
   titulo: String,
-  argumento: String,
-  mousePos: Object,
-  dato: Object,
-  dato2: Object,
-  altura: String
+  mousePos: {
+    type: Object,
+    default() {
+      return {
+        x: 0,
+        y: 0
+      }
+    },
+  },
+  datos: Object,
+  altura: {
+    type: String,
+    default: "13rem"
+  }
 })
 
 const height = ref("1rem")
@@ -40,17 +54,12 @@ const xPos = ref("0%")
 const yPos = ref("0%")
 
 const emit = defineEmits([
-  "dato",
+  "evento-guardar",
   "evento-cancelar"
 ])
 
 function guardar() {
-  emit("dato")
-}
-
-function cancelar() {
-  emit("evento-cancelar")
-  props.dato.valor = ""
+  emit("evento-guardar")
 }
 
 onMounted(() => {

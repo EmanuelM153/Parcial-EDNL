@@ -1,43 +1,26 @@
 <template>
-    <popUp_modificar v-if="popUpNodo.mostrar" @evento-cancelar="cancelarEdicion" @dato="guardarNodo"
-        :titulo="popUpNodo.titulo" :argumento="popUpNodo.argumento" :dato="popUpNodo.dato" :dato2="popUpNodo.dato"
-        :mouse-pos="{
-        x: mousePosX,
-        y: mousePosY
-    }"
-        :altura="ref('13rem')"
-    >
-        <template #default="{ dato, actualizar }">
-            <input @input="actualizar" :value="dato" autocomplete="on" type="text" />
-        </template>
-    </popUp_modificar>
-
-    <popUp_modificar v-if="popUpArista.mostrar" @evento-cancelar="cancelarEdicionArista" @dato="guardarArista"
-        :titulo="popUpArista.titulo" :argumento="popUpArista.argumento" :dato="popUpArista.peso"
-        :dato2="popUpArista.tipo" :mouse-pos="{
-            x: mousePosX,
-            y: mousePosY
-        }"
-        :altura="ref('18rem')"
-    >
-        <template #default="{ dato, actualizar }">
-            <input @input="actualizar" :value="dato" type="text"/>
-        </template>
-        <template #secundario="{ dato, actualizar }">
-            <p class="mb-2 text-left ml-2">Tipo</p>
-            <select required @input="actualizar" :value="dato" class="mb-2 w-full">
-                <option value="to" selected>Dirigida</option>
-                <option value="">No dirigida</option>
-            </select>
-        </template>
-    </popUp_modificar>
+    <popUp_Input v-if="popUpNodo.mostrar" @evento-cancelar="cancelarEdicionNodo" @evento-guardar="guardarNodo"
+        :datos="popUpNodo"
+        :argumento = "popUpNodo.argumento"
+        :titulo = "popUpNodo.titulo"
+        :mouse-pos = "mousePos"
+    />
+    <popUp_Input_ComboBox v-if="popUpArista.mostrar" @evento-cancelar="cancelarEdicionArista" @evento-guardar="guardarArista"
+        :datos="popUpArista"
+        :argumento-input = "popUpArista.argumento"
+        :argumento-combo-box = "popUpArista.argumentoComboBox"
+        :titulo = "popUpArista.titulo"
+        :mouse-pos = "mousePos"
+        :combo-box-options = "popUpArista.comboBoxOptions"
+    />
     <div @mousemove="moverMouse" class="mx-0 md:mx-2">
         <div ref="mynetwork" class="w-full h-96"></div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import popUp_modificar from "../components/popUp_modificar.vue"
+import popUp_Input from "../components/popUp_Input.vue"
+import popUp_Input_ComboBox from "../components/popUp_Input_ComboBox.vue"
 import { verificarNombre } from "@/utils/visjs";
 import { options } from "../config/visjs"
 import { ref, onMounted } from "vue";
@@ -49,52 +32,53 @@ const popUpNodo = ref({
     mostrar: false,
     titulo: "",
     argumento: "",
-    dato: ref({
-        valor: ""
-    })
+    input: ""
 })
 
 const popUpArista = ref({
     mostrar: false,
     titulo: "",
     argumento: "",
-    peso: ref({
-        valor: ""
-    }),
-    tipo: ref({
-        valor: ""
-    })
+    argumentoComboBox: "Tipo",
+    input: "",
+    comboBox: "to",
+    comboBoxOptions: [
+        { valor: "to", nombre: "Dirigida" },
+        { valor: "", nombre: "No Dirigida" }
+    ]
 })
 
-const mousePosX = ref(0)
-const mousePosY = ref(0)
+const mousePos = ref({
+    x: 0,
+    y: 0
+})
 var _data: any
 var _callback: Function
 
 function moverMouse(event: any) {
-    mousePosX.value = event.clientX;
-    mousePosY.value = event.clientY;
+    mousePos.value.x = event.clientX;
+    mousePos.value.y = event.clientY;
 }
 
 function guardarNodo() {
-    if (verificarNombre(popUpNodo.value.dato.valor, nombres)) {
-        nombres.push(popUpNodo.value.dato.valor)
-        _data.label = popUpNodo.value.dato.valor
+    if (verificarNombre(popUpNodo.value.input, nombres)) {
+        nombres.push(popUpNodo.value.input)
+        _data.label = popUpNodo.value.input
         _callback(_data)
-        popUpNodo.value.dato.valor = ""
+        popUpNodo.value.input = ""
         popUpNodo.value.mostrar = false
     }
 }
 
 function guardarArista() {
-    _data.arrows = popUpArista.value.tipo.valor
-    _data.label = String(popUpArista.value.peso.valor)
+    _data.arrows = popUpArista.value.comboBox
+    _data.label = String(popUpArista.value.input)
     _callback(_data)
-    popUpArista.value.peso.valor = ""
+    popUpArista.value.input = ""
     popUpArista.value.mostrar = false
 }
 
-function cancelarEdicion() {
+function cancelarEdicionNodo() {
     _callback(null)
     _data = null
     popUpNodo.value.mostrar = false
@@ -113,7 +97,7 @@ onMounted(() => {
             enabled: true,
             initiallyActive: true,
             editNode: function(data: any, callback: Function) {
-                popUpNodo.value.dato.valor = data.label
+                popUpNodo.value.input = data.label
                 popUpNodo.value.mostrar = true;
                 popUpNodo.value.titulo = "Editar Nodo"
                 popUpNodo.value.argumento = "Nuevo nombre"

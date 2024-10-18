@@ -32,11 +32,9 @@
             shadow-md
             md:text-base
             md:w-72
-            /* md:h-56 */
             md:pb-1
             text-sm
             w-60
-            /* h-48 */
             p-5
         ;
     }

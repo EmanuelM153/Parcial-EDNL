@@ -3,3 +3,6 @@
 - add a confirmation before changing pages, so that the network is not erased
 - fix edge labels appearing in the wrong position
 - fix repeated name message appearing twice
+- fix erasing nodes not releasing the names
+- move from editing the edge position to editing the edge value
+- delete border around visjs canva
