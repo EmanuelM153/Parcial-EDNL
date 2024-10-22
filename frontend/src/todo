@@ -1,2 +1,9 @@
 - make the popUp wrap around when the position is greater than the pixel size of the screen
 - check deletion button after deleting one node, that crashes editing (bug that has not been fixed)
+- check inheritance of props
+- use computed for dimensions instead of passing them as props
+- correct ajustarPopUpMatriz_dimensiones 
+- instead of modifying attributes individually modify the whole object
+- abstract popUp_Rutas
+- fix typescript types
+- organize functions in files

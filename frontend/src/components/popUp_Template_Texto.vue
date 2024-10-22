@@ -1,24 +1,13 @@
 <template>
-  <form class="popUp positionPopUP" @submit.prevent="() => {}">
+  <div class="popUp positionPopUP">
     <span class="text-base md:text-lg encabezado">{{ titulo }}</span>
     <div class="mb-3">
-      <slot :datosActualizados="props.datos"></slot>
+      <slot></slot>
     </div>
-    <div class="flex justify-center">
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <button @click="guardar()" class="boton mr-1">Guardar</button>
-            </td>
-            <td>
-              <button @click="emit('evento-cancelar')" class="boton">Cancelar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="bottom-1.5 botonAceptar">
+      <button @click="emit('evento-aceptar')" class="boton justify-center">Aceptar</button>
     </div>
-  </form>
+  </div>
 </template>
 
 <script lang="js" setup>
@@ -35,25 +24,17 @@ const props = defineProps({
       }
     },
   },
-  datos: Object,
-  altura: {
-    type: String,
-    default: "13rem"
-  }
+  dimensiones: null,
 })
 
-const height = ref("")
-const xPos = ref("0%")
-const yPos = ref("0%")
-
 const emit = defineEmits([
-  "evento-guardar",
-  "evento-cancelar"
+  "evento-aceptar",
 ])
 
-function guardar() {
-  emit("evento-guardar")
-}
+const height = ref("")
+const width = ref("")
+const xPos = ref("0%")
+const yPos = ref("0%")
 
 onMounted(() => {
   const offset = 150
@@ -70,7 +51,8 @@ onMounted(() => {
   else
     yPos.value = y + "px"
 
-  height.value = props.altura
+  height.value = props.dimensiones[1]
+  width.value = props.dimensiones[0]
 })
 
 </script>
@@ -80,5 +62,6 @@ onMounted(() => {
   top: v-bind(yPos);
   left: v-bind(xPos);
   height: v-bind(height);
+  width: v-bind(width);
 }
 </style>
